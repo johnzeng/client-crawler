@@ -1,0 +1,2 @@
+run: 
+	scrapy crawl sina
