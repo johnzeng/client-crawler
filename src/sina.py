@@ -18,12 +18,15 @@ cookies = cookieStr.split(';')
 driver = webdriver.PhantomJS()
 
 def Check():
-  data = driver.find_elements_by_xpath('//p[@class="comment_txt"]')
-  for i in data:
-    print i.text
+  data = driver.find_elements_by_xpath('//div[@class="WB_feed_detail clearfix"]')
+  for weibo in data:
+    comments = weibo.find_elements_by_xpath('//p[@class="comment_txt"]')
+    for comment in comments:
+      print comment.text
   for elem in driver.find_elements_by_xpath('//*[@id="pl_weibo_direct"]/div/div[2]/div/a[@class="page next S_txt1 S_line1"]'):
     href = elem.get_attribute('href')
     driver.get(href)
+    time.sleep(2)
     Check()
 
 try:
