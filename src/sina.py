@@ -1,5 +1,8 @@
+# -*- coding:utf-8 -*-
+
 from selenium import webdriver
 import sys,traceback
+import urllib
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 import os
@@ -17,14 +20,7 @@ cookies = cookieStr.split(';')
 
 driver = webdriver.PhantomJS()
 
-tick = 3
 def Check():
-#  we are testing now, so don't use too many page
-  global tick
-  tick = tick - 1
-  if tick == 0:
-    return
-# test code end
   opts = driver.find_elements_by_xpath('//a[@action-type="fl_unfold"]')
   for opt in opts:
     print "find a unfold"
@@ -32,25 +28,26 @@ def Check():
     opt.click()
   data = driver.find_elements_by_xpath('//div[@class="WB_feed_detail clearfix"]')
   for weibo in data:
-    print "get a detail"
     #get text
     comments = weibo.find_elements_by_xpath('.//p[@class="comment_txt"]')
     for comment in comments:
-      print "get a comment"
       print comment.text
 
     #get name
     nicknames = weibo.find_elements_by_xpath('.//a[@class="W_texta W_fb"]')
     for nickname in nicknames:
-      print "get a nickname"
       print nickname.text
       print nickname.get_attribute('href')
 
     #get time and direct link to weibo
     linkages = weibo.find_elements_by_xpath('.//div[@class="feed_from W_textb"]/a')
     for linkage in linkages:
-      print "get a link"
       print linkage.get_attribute('href')
+      dateStr = linkage.get_attribute('date')
+      dateLong = float(str(dateStr))
+      delta = time.time() - dateLong / 1000
+      if delta / 24 / 60 / 60 > 1:
+        return
       print linkage.text
       break
 
@@ -75,12 +72,14 @@ try:
         }
     driver.add_cookie(cookieDict)
 
-  driver.get("http://s.weibo.com/weibo/%25E5%2593%25AA%25E9%2587%258C%25E4%25B9%25B0%25E7%258C%25AB&b=1&nodup=1")
+#  driver.get("http://s.weibo.com/weibo/%25E5%2593%25AA%25E9%2587%258C%25E4%25B9%25B0%25E7%258C%25AB&b=1&nodup=1")
+  query = urllib.quote("买猫")
+  driver.get("http://s.weibo.com/weibo/%s&b=1&nodup=1" % query)
   
   Check()
   
 except:
-  print "get excet"
+  print "get except"
   tb = traceback.format_exc()
   print tb
 
