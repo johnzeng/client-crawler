@@ -17,16 +17,49 @@ cookies = cookieStr.split(';')
 
 driver = webdriver.PhantomJS()
 
+tick = 3
 def Check():
+#  we are testing now, so don't use too many page
+  global tick
+  tick = tick - 1
+  if tick == 0:
+    return
+# test code end
+  opts = driver.find_elements_by_xpath('//a[@action-type="fl_unfold"]')
+  for opt in opts:
+    print "find a unfold"
+    opt.text
+    opt.click()
   data = driver.find_elements_by_xpath('//div[@class="WB_feed_detail clearfix"]')
   for weibo in data:
-    comments = weibo.find_elements_by_xpath('//p[@class="comment_txt"]')
+    print "get a detail"
+    #get text
+    comments = weibo.find_elements_by_xpath('.//p[@class="comment_txt"]')
     for comment in comments:
+      print "get a comment"
       print comment.text
+
+    #get name
+    nicknames = weibo.find_elements_by_xpath('.//a[@class="W_texta W_fb"]')
+    for nickname in nicknames:
+      print "get a nickname"
+      print nickname.text
+      print nickname.get_attribute('href')
+
+    #get time and direct link to weibo
+    linkages = weibo.find_elements_by_xpath('.//div[@class="feed_from W_textb"]/a')
+    for linkage in linkages:
+      print "get a link"
+      print linkage.get_attribute('href')
+      print linkage.text
+      break
+
+
   for elem in driver.find_elements_by_xpath('//*[@id="pl_weibo_direct"]/div/div[2]/div/a[@class="page next S_txt1 S_line1"]'):
+    print "get next page"
     href = elem.get_attribute('href')
     driver.get(href)
-    time.sleep(2)
+    time.sleep(3)
     Check()
 
 try:
