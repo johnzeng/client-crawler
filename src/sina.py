@@ -16,6 +16,16 @@ cookieStr = os.environ['SINA_COOKIE']
 cookies = cookieStr.split(';')
 
 driver = webdriver.PhantomJS()
+
+def Check():
+  data = driver.find_elements_by_xpath('//p[@class="comment_txt"]')
+  for i in data:
+    print i.text
+  for elem in driver.find_elements_by_xpath('//*[@id="pl_weibo_direct"]/div/div[2]/div/a[@class="page next S_txt1 S_line1"]'):
+    href = elem.get_attribute('href')
+    driver.get(href)
+    Check()
+
 try:
   driver.set_window_size(1124, 850)
   driver.get("http://weibo.com/login.php")
@@ -29,11 +39,9 @@ try:
         }
     driver.add_cookie(cookieDict)
 
-  driver.get("http://s.weibo.com/weibo/%25E5%2593%25AA%25E9%2587%258C%2520%25E4%25B9%25B0%25E7%258C%25AB?topnav=1&wvr=6&b=1")
-  data = driver.find_elements_by_xpath('//p[@class="comment_txt"]')
-  for i in data:
-    print i.text
-  print driver.page_source
+  driver.get("http://s.weibo.com/weibo/%25E5%2593%25AA%25E9%2587%258C%25E4%25B9%25B0%25E7%258C%25AB&b=1&nodup=1")
+  
+  Check()
   
 except:
   print "get excet"
