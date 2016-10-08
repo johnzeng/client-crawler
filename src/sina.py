@@ -73,7 +73,9 @@ try:
     driver.add_cookie(cookieDict)
 
 #  driver.get("http://s.weibo.com/weibo/%25E5%2593%25AA%25E9%2587%258C%25E4%25B9%25B0%25E7%258C%25AB&b=1&nodup=1")
-  query = urllib.quote("买猫")
+# we only need to make this to a query to database
+  arg = sys.argv[1]
+  query = urllib.quote(arg)
   driver.get("http://s.weibo.com/weibo/%s&b=1&nodup=1" % query)
   
   Check()
